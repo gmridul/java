@@ -9,31 +9,66 @@ import javax.swing.*;
 import java.util.*;
 import javax.swing.filechooser.*;
 
+/**
+ * The main GUI class that displays the buttons
+ * for loading the two images and inputting the number of Frames
+ */
 public class MorphGUI extends Component implements ActionListener {
-    JButton openButton1, openButton2, morph;
-    JTextField framesButton;    
-    static JFrame f, g;
+    /**
+     * openButton1 loads the first image
+     */
+    JButton openButton1;
+    /**
+     * openButton2 loads the second image
+     */ 
+    JButton openButton2;
+    /**
+     * morph stands for the load option
+     */
+    JButton morph;
+    /**
+     * framesButton gets the value of the number of frames
+     */
+    JTextField framesButton;
+    /**
+     * f displays the first jframe that shows the four buttons
+     */
+    static JFrame init_frame;
+    /**
+     * image_frame displays the second jframe that shows the images
+     */
+    static JFrame image_frame;
+    /**
+     * fc is the filechooser wizard
+     */
     JFileChooser fc;
     
+    /**
+     * the main function that coordinates the process
+     */
     public static void main(String[] args) {
-	f = new JFrame("Select the image files");
-	f.add (new MorphGUI());
-        f.addWindowListener(new WindowAdapter(){
+	init_frame = new JFrame("Select the image files");
+	init_frame.add (new MorphGUI());
+        init_frame.addWindowListener(new WindowAdapter(){
                 public void windowClosing(WindowEvent e) {
                     System.exit(0);
                 }
             });
-	f.pack();
-        f.setVisible(true);
+	init_frame.pack();
+        init_frame.setVisible(true);
 	
-	g = new JFrame("Image Morph");
-	g.addWindowListener(new WindowAdapter(){
+	image_frame = new JFrame("Image Morph");
+	image_frame.addWindowListener(new WindowAdapter(){
                 public void windowClosing(WindowEvent e) {
                     System.exit(0);
                 }
             });
     }
 
+    /**
+     * the constructor function of MorphGUI
+     * builds the four buttons in the f jpanel
+     */
     public MorphGUI() {
 	fc = new JFileChooser("../images");
 	openButton1 = new JButton("Select source image");
@@ -49,9 +84,12 @@ public class MorphGUI extends Component implements ActionListener {
 	buttonPanel.add(openButton2);
 	buttonPanel.add(morph);
 	buttonPanel.add(framesButton);
-	f.add(buttonPanel, BorderLayout.PAGE_START);
+	init_frame.add(buttonPanel, BorderLayout.PAGE_START);
 	}
 
+    /**
+     * action listener for jpanel init_frame
+     */
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == openButton1) {
 	    int returnVal = fc.showOpenDialog(MorphGUI.this);
@@ -70,35 +108,50 @@ public class MorphGUI extends Component implements ActionListener {
 
 	if (e.getSource() == morph)
 	    {
-		f.setVisible(false);
-		g.add(new Image("../images/" + openButton1.getLabel(), "../images/" + openButton2.getLabel(), Integer.parseInt(framesButton.getText())));
-		g.pack();
-		g.setVisible(true);
+		init_frame.setVisible(false);
+		image_frame.add(new Image("../images/" + openButton1.getLabel(), "../images/" + openButton2.getLabel(), Integer.parseInt(framesButton.getText())));
+		image_frame.pack();
+		image_frame.setVisible(true);
 	    }
     }
-
-    protected static ImageIcon createImageIcon(String path) {
-        java.net.URL imgURL = MorphGUI.class.getResource(path);
-        if (imgURL != null) {
-            return new ImageIcon(imgURL);
-        } else {
-            System.err.println("Couldn't find file: " + path);
-            return null;
-        }
-    }
-
 }
 
+/**
+ * class responsible for handling events for the second jpanel that displays the images
+ */
 class Image extends Component implements MouseListener, KeyListener{
-    
+    /**
+     * the first image
+     */
     BufferedImage img1;
+    /**
+     * the second image
+     */
     BufferedImage img2;
+    /**
+     * the number of frames
+     */
     int numFrames;
+    /**
+     * stores the location of the x-coordinates of the left-clicks done on the image
+     */
     ArrayList<Integer> leftXClicks = new ArrayList<Integer>();
+    /**
+     * stores the location of the y-coordinates of the left-clicks done on the image
+     */
     ArrayList<Integer> leftYClicks = new ArrayList<Integer>();
+    /**
+     * stores the location of the x-coordinates of the right-clicks done on the image
+     */
     ArrayList<Integer> rightXClicks = new ArrayList<Integer>();
+    /**
+     * stores the location of the y-coordinates of the right-clicks done on the image
+     */
     ArrayList<Integer> rightYClicks = new ArrayList<Integer>();
     
+    /**
+     * overrides the paint method of the Component class
+     */
     public void paint(Graphics g) {
 	Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(img1, 0, 0, null);
@@ -120,6 +173,11 @@ class Image extends Component implements MouseListener, KeyListener{
 
     }
 
+    /**
+     * the constructor of the Image class
+     * takes as input the path for the two images
+     * and the number of the frames required
+     */
     public Image(String imgPath1, String imgPath2, int _numFrames) {
        try {
            img1 = ImageIO.read(new File(imgPath1));
@@ -134,6 +192,9 @@ class Image extends Component implements MouseListener, KeyListener{
 
     }
 
+    /**
+     * overrides the getPreferredSize function of the Component class
+     */
     public Dimension getPreferredSize() {
         if (img1 == null || img2 == null) {
              return new Dimension(100,100);
@@ -142,18 +203,30 @@ class Image extends Component implements MouseListener, KeyListener{
        }
     }
     
+    /**
+     * don't do anything when the mouse is pressed
+     */
     public void mousePressed(MouseEvent e) {
     }
-    
+    /**
+     * don't do anything when the mouse is released
+     */
     public void mouseReleased(MouseEvent e) {
     }
-
+    /**
+     * don't do anything when the mouse enters the jpanel
+     */
     public void mouseEntered(MouseEvent e) {
     }
-    
+    /**
+     * don't do anything when the mouse leaves the jpanel
+     */    
     public void mouseExited(MouseEvent e) {
     }
     
+    /**
+     * captures the moused clicked event
+     */
     public void mouseClicked(MouseEvent e) {
 	if (e.getButton() == 1)
 	    {
@@ -170,6 +243,9 @@ class Image extends Component implements MouseListener, KeyListener{
 	repaint();
     }
 
+    /**
+     * captures the key typed event
+     */
     public void keyTyped(KeyEvent e) {
         if (e.getKeyChar() == 'm') {
 	    Vector <line_t> srclines = new Vector <line_t> (), dstlines = new Vector <line_t> ();
@@ -193,9 +269,15 @@ class Image extends Component implements MouseListener, KeyListener{
 	}   
     }
 
+    /**
+     * don't do anything when the key is pressed
+     */
     public void keyPressed(KeyEvent e) {
     }
 
+    /**
+     * don't do anything when the key is released
+     */
     public void keyReleased(KeyEvent e) {
     }
 
