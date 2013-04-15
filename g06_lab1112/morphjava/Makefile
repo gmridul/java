@@ -41,19 +41,14 @@ OTHERSRCS := $(wildcard Jmorph/*.java)
 CLASS := MorphGUI.class
 .PHONY: all setup doc clean distclean
 
-all: setup MorphGUI.class
-
-setup:
-	@$(ECHO) "Setting up compilation..."
+compile : $(SRCDIR)/$(SRCS) $(SRCDIR)/$(OTHERSRCS)
+	@cd $(SRCDIR)/; \
+	javac -d ../class MorphGUI.java 
 
 doc : $(SRCDIR)/$(SRCS) $(SRCDIR)/$(OTHERSRCS)
 	@cd $(SRCDIR); \
 	javadoc -d ../doc *.java Jmorph/*.java
 
-compile : $(SRCDIR)/$(SRCS) $(SRCDIR)/$(OTHERSRCS)
-	@cd $(SRCDIR)/; \
-	javac -d ../class MorphGUI.java 
-	
 clean:
 	@$(ECHO) -n "Cleaning up..."
 	@$(RM) -rf $(CLASSDIR)/*
