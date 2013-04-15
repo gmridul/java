@@ -11,6 +11,7 @@ import javax.swing.filechooser.*;
 
 public class MorphGUI extends Component implements ActionListener {
     JButton openButton1, openButton2, morph;
+    JTextField framesButton;    
     static JFrame f, g;
     JFileChooser fc;
     
@@ -41,10 +42,13 @@ public class MorphGUI extends Component implements ActionListener {
         openButton2.addActionListener(this);
 	morph = new JButton("Load");
 	morph.addActionListener(this);
+	framesButton = new JTextField("numFrames");
+	framesButton.addActionListener(this);
 	JPanel buttonPanel = new JPanel();
         buttonPanel.add(openButton1);
 	buttonPanel.add(openButton2);
 	buttonPanel.add(morph);
+	buttonPanel.add(framesButton);
 	f.add(buttonPanel, BorderLayout.PAGE_START);
 	}
 
@@ -67,7 +71,7 @@ public class MorphGUI extends Component implements ActionListener {
 	if (e.getSource() == morph)
 	    {
 		f.setVisible(false);
-		g.add(new Image("../images/" + openButton1.getLabel(), "../images/" + openButton2.getLabel()));
+		g.add(new Image("../images/" + openButton1.getLabel(), "../images/" + openButton2.getLabel(), Integer.parseInt(framesButton.getText())));
 		g.pack();
 		g.setVisible(true);
 	    }
@@ -89,6 +93,7 @@ class Image extends Component implements MouseListener, KeyListener{
     
     BufferedImage img1;
     BufferedImage img2;
+    int numFrames;
     ArrayList<Integer> leftXClicks = new ArrayList<Integer>();
     ArrayList<Integer> leftYClicks = new ArrayList<Integer>();
     ArrayList<Integer> rightXClicks = new ArrayList<Integer>();
@@ -115,10 +120,11 @@ class Image extends Component implements MouseListener, KeyListener{
 
     }
 
-    public Image(String imgPath1, String imgPath2) {
+    public Image(String imgPath1, String imgPath2, int _numFrames) {
        try {
            img1 = ImageIO.read(new File(imgPath1));
 	   img2 = ImageIO.read(new File(imgPath2));
+	   numFrames = _numFrames;
 	   addMouseListener(this);
 	   addKeyListener(this);
 	   setFocusable(true);
@@ -175,9 +181,9 @@ class Image extends Component implements MouseListener, KeyListener{
 	    }
 	    morph M = new morph ();
 	    BufferedImage timage = new BufferedImage (img1.getWidth(), img1.getHeight(), BufferedImage.TYPE_INT_ARGB);
-	    for (int i = 0; i < 10; ++i) {
+	    for (int i = 0; i < numFrames; ++i) {
 		try {
-		    M.morph_frame (i, 10, srclines, dstlines, img1, img2, timage);
+		    M.morph_frame (i, numFrames, srclines, dstlines, img1, img2, timage);
 		}
 		catch (java.io.IOException ioe)
 		    {
