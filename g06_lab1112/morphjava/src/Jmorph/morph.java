@@ -63,13 +63,13 @@ public class morph {
 
                 for (int lnum = 0; lnum< srclines.size(); lnum++) {
                     line_t tl = new line_t(tmplines.elementAt(lnum));
-                    double u = compute_u(tl, temppt);
-                    double v = compute_v(tl, temppt);
+                    double u = compute_u(tl, temppt); /** computing parameter u as explained in the given pdf file*/
+                    double v = compute_v(tl, temppt); /** computing parameter v as explained in the given pdf file*/
 
-                    point_t sX = new point_t(calc_dst_pixel(u, v, srclines.elementAt(lnum)));
-                    point_t sDi = new point_t(sX.sub(temppt));
-                    point_t dX = new point_t(calc_dst_pixel(u, v, dstlines.elementAt(lnum)));
-                    point_t dDi = new point_t(dX.sub(temppt));
+                    point_t sX = new point_t(calc_dst_pixel(u, v, srclines.elementAt(lnum))); /** computing X as given in pdf file*/
+                    point_t sDi = new point_t(sX.sub(temppt));/** computing distance between X and temppt*/
+                    point_t dX = new point_t(calc_dst_pixel(u, v, dstlines.elementAt(lnum)));/** computing X' as given in pdf file*/
+                    point_t dDi = new point_t(dX.sub(temppt));/** computing distance between X' and temppt*/
 	    
 	    
         	    double dist = 0.0;
@@ -93,16 +93,18 @@ public class morph {
 
                 }
 
-                point_t srcpt = new point_t((temppt.x + sdsum.x / wsum),(temppt.y + sdsum.y / wsum));	
-                point_t dstpt = new point_t((temppt.x + ddsum.x / wsum),(temppt.y + ddsum.y / wsum));
+                point_t srcpt = new point_t((temppt.x + sdsum.x / wsum),(temppt.y + sdsum.y / wsum));/** finding the source point*/	
+                point_t dstpt = new point_t((temppt.x + ddsum.x / wsum),(temppt.y + ddsum.y / wsum));/** finding the destination point*/
 	
 	
                 Color srccolor, dstcolor;
+			/** storing the pixel value of the source point*/
                         if ((srcpt.x > 0 && srcpt.x < simage.getWidth()) && (srcpt.y > 0 && srcpt.y < simage.getHeight())) {
                             srccolor = new Color(simage.getRGB((int) srcpt.x, (int)srcpt.y), true);
                         } else {
                             srccolor = new Color(simage.getRGB(col, row), true);
                         }
+			/** storing the pixel value of the destination point*/
 
                         if ((dstpt.x > 0 && dstpt.x < simage.getWidth()) && (dstpt.y > 0 && dstpt.y < simage.getHeight())) {
                             dstcolor = new Color(dimage.getRGB((int)dstpt.x, (int)dstpt.y), true);
