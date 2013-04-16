@@ -1,10 +1,8 @@
-package Jmorph;
+package morph;
 
 import java.util.*;
 import java.awt.Color;
 import java.awt.image.*;
-import javax.imageio.*;
-import java.io.File;
 import java.io.IOException;
         
 
@@ -58,7 +56,7 @@ public class morph {
 
         for (int row = 0; row < simage.getHeight(); row++) {
             for (int col = 0; col < simage.getWidth(); col++) {
-                point_t temppt = new point_t(col, row);
+                point_t temppt = new point_t(col, row);/** point at (row,col)*/
                 double wsum = 0;
                 point_t sdsum = new point_t(0,0);
                 point_t ddsum = new point_t(0,0);
@@ -70,7 +68,6 @@ public class morph {
 
                     point_t sX = new point_t(calc_dst_pixel(u, v, srclines.elementAt(lnum)));
                     point_t sDi = new point_t(sX.sub(temppt));
-
                     point_t dX = new point_t(calc_dst_pixel(u, v, dstlines.elementAt(lnum)));
                     point_t dDi = new point_t(dX.sub(temppt));
 	    
@@ -113,10 +110,10 @@ public class morph {
                             dstcolor = new Color(dimage.getRGB(col, row), true);
                         }
 
-                        int r = (int) ((1 - t) * srccolor.getRed() + t * dstcolor.getRed());
-                        int g = (int) ((1 - t) * srccolor.getGreen() + t * dstcolor.getGreen());
-                        int bl = (int) ((1 - t) * srccolor.getBlue() + t * dstcolor.getBlue());
-                        int al = (int) ((1 - t) * srccolor.getAlpha() + t * dstcolor.getAlpha());
+                        int r = (int) ((1 - t) * srccolor.getRed() + t * dstcolor.getRed()); /** red-component of the pixel*/
+                        int g = (int) ((1 - t) * srccolor.getGreen() + t * dstcolor.getGreen());/** green-component of the pixel*/
+                        int bl = (int) ((1 - t) * srccolor.getBlue() + t * dstcolor.getBlue()) ; /** blue-component of the pixel*/
+                        int al = (int) ((1 - t) * srccolor.getAlpha() + t * dstcolor.getAlpha()); /** alpha-component of the pixel*/
                        /** sets the rgb value to the temp image */
                         timage.setRGB(col, row, ((al << 24) | (r << 16) | (g << 8) | bl));
 
